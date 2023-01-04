@@ -1,4 +1,12 @@
-select NAME, count(CLIENT_ID) as PROJECT_COUNT from CLIENT
-join PROJECT P2 on CLIENT.ID = P2.CLIENT_ID
-group by NAME
-order by count(CLIENT_ID) desc limit 2;
+SELECT name, COUNT(project.client_id) AS project_count
+FROM client
+         INNER JOIN project
+                    ON client.id = project.client_id
+GROUP BY name
+HAVING COUNT(project.client_id) IN (
+    SELECT COUNT(client_id)
+    FROM project
+    GROUP BY client_id
+    order by count(CLIENT_ID) desc
+    LIMIT 1
+    );
